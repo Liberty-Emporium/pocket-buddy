@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Upload · Pocket Assistant{% endblock %}
+{% block content %}
+<h1>Upload a file</h1>
+<form class="stack" method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  <div>
+    <label for="id_file">File</label>
+    {{ form.file }}
+    {% if form.file.errors %}<ul class="errorlist">{% for e in form.file.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+  </div>
+  <div>
+    <label for="id_matter">Client / Matter (optional)</label>
+    {{ form.matter }}
+  </div>
+  <div>
+    <label for="id_title">Title (optional)</label>
+    {{ form.title }}
+  </div>
+  <div>
+    <label for="id_note">Note for the boss (optional)</label>
+    {{ form.note }}
+  </div>
+  <button class="btn" type="submit">Upload</button>
+  <a class="btn ghost" href="{% url 'secretary_list' %}" style="text-align:center;text-decoration:none">Cancel</a>
+</form>
+{% endblock %}

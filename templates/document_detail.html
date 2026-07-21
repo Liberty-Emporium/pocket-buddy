@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}{{ doc.title }} · Pocket Assistant{% endblock %}
+{% block content %}
+<a href="{% if user.is_boss %}{% url 'boss_feed' %}{% else %}{% url 'secretary_list' %}{% endif %}"
+   style="text-decoration:none;font-size:.9rem">‹ Back</a>
+<h1 style="margin-top:10px">{{ doc.title }}</h1>
+
+<div class="card">
+  <div class="meta">
+    {% if doc.matter %}{{ doc.matter.name }}{% if doc.matter.client_name %} · {{ doc.matter.client_name }}{% endif %} · {% endif %}
+    Uploaded {{ doc.created_at|date:"M j, Y g:i A" }}{% if doc.uploaded_by %} by {{ doc.uploaded_by.username }}{% endif %}
+  </div>
+  <div class="row" style="margin-top:8px;gap:6px;flex-wrap:wrap">
+    {% if doc.category != 'unsorted' %}<span class="badge cat">{{ doc.get_category_display }}</span>{% endif %}
+    <span class="badge">.{{ doc.extension|default:"file" }}</span>
+    {% if doc.handled %}<span class="badge done">Handled</span>{% endif %}
+  </div>
+  {% if doc.ai_summary %}<div class="summary"><b>AI summary:</b> {{ doc.ai_summary }}</div>{% endif %}
+  {% if doc.note %}<div class="note"><b>Note:</b> {{ doc.note }}</div>{% endif %}
+
+  <div class="row" style="margin-top:14px;gap:8px">
+    <a class="filelink" style="flex:1;justify-content:center" href="{% url 'document_serve' doc.pk %}?view=1" target="_blank">👁 Open</a>
+    <a class="filelink" style="flex:1;justify-content:center" href="{% url 'document_serve' doc.pk %}">⬇ Download</a>
+  </div>
+  <form method="post" action="{% url 'document_handle' doc.pk %}" style="margin-top:8px">
+    {% csrf_token %}
+    <button class="btn {% if doc.handled %}secondary{% endif %}" type="submit">
+      {% if doc.handled %}Mark not handled{% else %}✓ Mark handled{% endif %}
+    </button>
+  </form>
+</div>
+
+<h1 style="font-size:1.05rem;margin-top:22px">Notes</h1>
+{% for c in doc.comments.all %}
+  <div class="comment">
+    <div class="who">{{ c.author.username|default:"—" }} · {{ c.created_at|date:"M j, g:i A" }}</div>
+    <div>{{ c.body|linebreaksbr }}</div>
+  </div>
+{% empty %}
+  <div class="meta" style="margin-bottom:10px">No notes yet.</div>
+{% endfor %}
+
+<form class="stack" method="post" action="{% url 'document_comment' doc.pk %}" style="margin-top:8px">
+  {% csrf_token %}
+  {{ comment_form.body }}
+  <button class="btn" type="submit">Add note</button>
+</form>
+{% endblock %}

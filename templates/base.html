@@ -1,0 +1,85 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0f172a">
+<title>{% block title %}Pocket Assistant{% endblock %}</title>
+<style>
+  :root{
+    --bg:#0f172a; --panel:#1e293b; --panel2:#334155; --line:#334155;
+    --text:#f1f5f9; --muted:#94a3b8; --accent:#3b82f6; --accent2:#2563eb;
+    --good:#22c55e; --warn:#f59e0b; --danger:#ef4444; --radius:14px;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+       background:var(--bg);color:var(--text);-webkit-text-size-adjust:100%}
+  header{position:sticky;top:0;z-index:10;background:rgba(15,23,42,.92);
+    backdrop-filter:blur(8px);border-bottom:1px solid var(--line);
+    padding:14px 16px calc(14px + env(safe-area-inset-top,0)) 16px;
+    display:flex;align-items:center;justify-content:space-between;gap:10px}
+  header .brand{font-weight:700;font-size:1.05rem;line-height:1.2}
+  header .brand small{display:block;font-weight:400;color:var(--muted);font-size:.72rem}
+  header a.logout{color:var(--muted);text-decoration:none;font-size:.8rem;
+    border:1px solid var(--line);padding:6px 10px;border-radius:10px}
+  main{max-width:680px;margin:0 auto;padding:16px 16px 96px 16px}
+  h1{font-size:1.25rem;margin:.2rem 0 1rem}
+  a{color:var(--accent)}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
+    padding:14px 16px;margin-bottom:12px;display:block;text-decoration:none;color:inherit}
+  .card:active{background:var(--panel2)}
+  .row{display:flex;align-items:center;gap:10px}
+  .grow{flex:1;min-width:0}
+  .title{font-weight:600;font-size:.98rem;word-break:break-word}
+  .meta{color:var(--muted);font-size:.78rem;margin-top:3px}
+  .note{margin-top:8px;font-size:.86rem;background:var(--panel2);
+    padding:8px 10px;border-radius:10px;color:#e2e8f0}
+  .badge{display:inline-block;font-size:.68rem;font-weight:700;text-transform:uppercase;
+    letter-spacing:.03em;padding:3px 8px;border-radius:999px;background:var(--panel2);color:var(--muted)}
+  .badge.new{background:#1d4ed8;color:#fff}
+  .badge.cat{background:#0e7490;color:#e0f2fe}
+  .badge.done{background:#166534;color:#dcfce7}
+  .fab{position:fixed;left:50%;transform:translateX(-50%);
+    bottom:calc(20px + env(safe-area-inset-bottom,0));
+    background:var(--accent2);color:#fff;text-decoration:none;font-weight:600;
+    padding:14px 22px;border-radius:999px;box-shadow:0 8px 24px rgba(37,99,235,.45);z-index:20}
+  form.stack{display:flex;flex-direction:column;gap:14px}
+  label{font-size:.82rem;color:var(--muted);display:block;margin-bottom:5px}
+  input,textarea,select,button{font:inherit}
+  input[type=text],input[type=password],input[type=file],textarea,select{
+    width:100%;background:var(--panel);border:1px solid var(--line);color:var(--text);
+    border-radius:12px;padding:12px 14px}
+  textarea{resize:vertical}
+  .btn{background:var(--accent2);color:#fff;border:none;border-radius:12px;
+    padding:13px 18px;font-weight:600;cursor:pointer;width:100%}
+  .btn.secondary{background:var(--panel2);color:var(--text)}
+  .btn.ghost{background:transparent;border:1px solid var(--line);color:var(--text)}
+  .errorlist{color:var(--danger);font-size:.82rem;list-style:none;padding:0;margin:4px 0 0}
+  .empty{text-align:center;color:var(--muted);padding:48px 12px}
+  .summary{background:#0b2545;border:1px solid #1d4ed8;border-radius:12px;
+    padding:12px 14px;font-size:.88rem;margin-top:10px}
+  .summary b{color:#93c5fd}
+  .filelink{display:inline-flex;align-items:center;gap:8px;background:var(--panel2);
+    padding:12px 14px;border-radius:12px;text-decoration:none;color:var(--text);font-weight:600}
+  .toolbar{display:flex;gap:8px;margin-bottom:14px}
+  .toolbar a{flex:1;text-align:center;padding:9px;border-radius:10px;text-decoration:none;
+    border:1px solid var(--line);color:var(--muted);font-size:.85rem}
+  .toolbar a.active{background:var(--panel);color:var(--text)}
+  .comment{background:var(--panel);border:1px solid var(--line);border-radius:12px;
+    padding:10px 12px;margin-bottom:8px}
+  .comment .who{font-size:.72rem;color:var(--muted);margin-bottom:3px}
+</style>
+</head>
+<body>
+{% if user.is_authenticated %}
+<header>
+  <div class="brand">Pocket Assistant
+    <small>{{ org.display_name|default:org.name|default:"No organization" }}</small>
+  </div>
+  <a class="logout" href="{% url 'logout' %}">Log out</a>
+</header>
+{% endif %}
+<main>{% block content %}{% endblock %}</main>
+</body>
+</html>

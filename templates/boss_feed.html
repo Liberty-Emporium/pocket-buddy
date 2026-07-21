@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}My Files · Pocket Assistant{% endblock %}
+{% block content %}
+<h1>My Files</h1>
+<div class="toolbar">
+  <a href="{% url 'boss_feed' %}" class="{% if not show_handled %}active{% endif %}">To review</a>
+  <a href="{% url 'boss_feed' %}?handled=1" class="{% if show_handled %}active{% endif %}">All</a>
+</div>
+{% if documents %}
+  {% for doc in documents %}
+    <div class="card">
+      <a href="{% url 'document_detail' doc.pk %}" style="text-decoration:none;color:inherit">
+        <div class="row">
+          <div class="grow">
+            <div class="title">{{ doc.title }}</div>
+            <div class="meta">
+              {% if doc.matter %}{{ doc.matter.name }} · {% endif %}{{ doc.created_at|date:"M j, g:i A" }}
+            </div>
+          </div>
+          {% if not doc.seen_by_boss %}<span class="badge new">New</span>{% endif %}
+        </div>
+        <div class="row" style="margin-top:6px;gap:6px;flex-wrap:wrap">
+          {% if doc.category != 'unsorted' %}<span class="badge cat">{{ doc.get_category_display }}</span>{% endif %}
+          {% if doc.handled %}<span class="badge done">Handled</span>{% endif %}
+        </div>
+        {% if doc.ai_summary %}<div class="summary"><b>AI:</b> {{ doc.ai_summary }}</div>{% endif %}
+        {% if doc.note %}<div class="note">{{ doc.note }}</div>{% endif %}
+      </a>
+      <div class="row" style="margin-top:12px;gap:8px">
+        <a class="filelink" style="flex:1;justify-content:center"
+           href="{% url 'document_serve' doc.pk %}">⬇ Download</a>
+        <form method="post" action="{% url 'document_handle' doc.pk %}" style="flex:1">
+          {% csrf_token %}
+          <button class="btn {% if doc.handled %}secondary{% endif %}" type="submit">
+            {% if doc.handled %}Undo{% else %}✓ Handled{% endif %}
+          </button>
+        </form>
+      </div>
+    </div>
+  {% endfor %}
+{% else %}
+  <div class="empty">
+    {% if show_handled %}No files yet.{% else %}All caught up — nothing to review. 🎉{% endif %}
+  </div>
+{% endif %}
+{% endblock %}
