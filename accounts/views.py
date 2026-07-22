@@ -19,9 +19,11 @@ def logout_view(request):
     return redirect("login")
 
 
-@login_required
 def home(request):
-    """Send each role to the right screen."""
-    if request.user.is_boss:
-        return redirect("boss_feed")
-    return redirect("secretary_list")
+    """Root: signed-in users go to their app screen; signed-out visitors see
+    the public landing page."""
+    if request.user.is_authenticated:
+        if request.user.is_boss:
+            return redirect("boss_feed")
+        return redirect("secretary_list")
+    return render(request, "landing.html")

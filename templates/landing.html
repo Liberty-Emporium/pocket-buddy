@@ -1,0 +1,269 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0f172a">
+<title>Pocket Buddy — Your Law Office, In Your Pocket</title>
+<meta name="description" content="Pocket Buddy is a private, mobile-first document pipeline for small law offices. Your secretary uploads files, AI sorts and summarizes them, and you review everything from your phone.">
+<style>
+  :root{
+    --bg:#0f172a; --panel:#1e293b; --panel2:#334155; --line:#334155;
+    --text:#f1f5f9; --muted:#94a3b8; --accent:#3b82f6; --accent2:#2563eb;
+    --good:#22c55e; --cyan:#22d3ee; --radius:14px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1000px;margin:0 auto;padding:0 22px}
+  a{color:var(--accent);text-decoration:none}
+
+  /* Nav */
+  nav{position:sticky;top:0;z-index:50;background:rgba(15,23,42,.92);backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line)}
+  nav .wrap{display:flex;align-items:center;justify-content:space-between;height:60px}
+  .brand{font-weight:800;font-size:1.1rem;letter-spacing:-.01em}
+  .brand span{color:var(--accent)}
+  .nav-cta{background:var(--accent2);color:#fff;font-weight:600;padding:9px 20px;border-radius:10px;
+    font-size:.88rem}
+
+  /* Hero */
+  .hero{padding:80px 0 56px;text-align:center}
+  .pill{display:inline-block;font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--cyan);background:rgba(34,211,238,.1);border:1px solid rgba(34,211,238,.3);
+    padding:6px 16px;border-radius:999px;margin-bottom:20px}
+  .hero h1{font-size:clamp(2rem,5.5vw,3.3rem);font-weight:800;line-height:1.08;letter-spacing:-.02em;
+    margin-bottom:18px}
+  .hero h1 em{font-style:normal;color:var(--accent)}
+  .hero p.lede{font-size:clamp(1rem,2.2vw,1.2rem);color:var(--muted);max-width:660px;margin:0 auto 30px}
+  .btn-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+  .btn{display:inline-block;font-weight:600;padding:14px 30px;border-radius:12px;font-size:1rem;
+    transition:transform .12s ease}
+  .btn:active{transform:translateY(1px)}
+  .btn-primary{background:var(--accent2);color:#fff}
+  .btn-ghost{border:1px solid var(--line);color:var(--text);background:var(--panel)}
+  .hero .tiny{margin-top:18px;font-size:.8rem;color:var(--muted)}
+
+  /* Strip */
+  .strip{border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--panel);
+    padding:18px 0}
+  .strip .wrap{display:flex;gap:30px;justify-content:center;flex-wrap:wrap}
+  .strip .item{display:flex;align-items:center;gap:9px;font-size:.88rem;color:var(--muted)}
+  .strip .item b{color:var(--text);font-weight:600}
+  .dot{width:8px;height:8px;border-radius:50%;background:var(--accent);flex:none}
+
+  section{padding:64px 0}
+  .kicker{font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--accent);margin-bottom:10px}
+  h2{font-size:clamp(1.5rem,3.5vw,2.2rem);font-weight:800;letter-spacing:-.02em;line-height:1.15;
+    margin-bottom:14px}
+  .sub{color:var(--muted);font-size:1rem;max-width:620px;margin-bottom:38px}
+
+  .steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:18px}
+  .step{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:26px 22px}
+  .step .num{font-size:.76rem;font-weight:800;color:var(--cyan);letter-spacing:.05em;margin-bottom:10px}
+  .step .icon{font-size:1.8rem;margin-bottom:12px}
+  .step h3{font-size:1.1rem;font-weight:700;margin-bottom:7px}
+  .step p{color:var(--muted);font-size:.9rem}
+
+  .grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:18px}
+  .feat{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:24px 22px}
+  .feat .fi{width:44px;height:44px;border-radius:12px;background:var(--panel2);display:flex;
+    align-items:center;justify-content:center;font-size:1.3rem;margin-bottom:14px}
+  .feat h3{font-size:1.03rem;font-weight:700;margin-bottom:7px}
+  .feat p{color:var(--muted);font-size:.88rem}
+
+  .split{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:18px}
+  .role{border-radius:var(--radius);padding:28px 26px;border:1px solid var(--line)}
+  .role.sec{background:var(--panel)}
+  .role.boss{background:var(--panel)}
+  .role .tag{font-size:.72rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;margin-bottom:12px}
+  .role.sec .tag{color:var(--accent)}
+  .role.boss .tag{color:var(--cyan)}
+  .role h3{font-size:1.25rem;font-weight:800;margin-bottom:12px}
+  .role ul{list-style:none}
+  .role li{color:var(--muted);font-size:.92rem;padding:6px 0 6px 24px;position:relative}
+  .role li::before{content:"✓";position:absolute;left:0;color:var(--good);font-weight:700}
+
+  .trust{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:36px}
+  .trust .big{font-size:1.2rem;font-weight:700;line-height:1.4;margin-bottom:14px}
+  .trust .big em{font-style:normal;color:var(--cyan)}
+  .trust p{color:var(--muted);font-size:.94rem;margin-top:10px}
+
+  .cta{text-align:center;padding:70px 0}
+  .cta p{color:var(--muted);margin-bottom:28px}
+
+  footer{border-top:1px solid var(--line);padding:28px 0;text-align:center;color:var(--muted);font-size:.82rem}
+  footer .fb{font-weight:700;color:var(--text)}
+
+  @media(max-width:640px){
+    section{padding:48px 0}
+    .hero{padding:56px 0 44px}
+    .trust{padding:26px 20px}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <div class="brand">Pocket<span>Buddy</span></div>
+    <a class="nav-cta" href="{% url 'login' %}">Sign In</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="pill">Built for Small Law Offices</div>
+    <h1>Your entire case file,<br><em>in your pocket.</em></h1>
+    <p class="lede">Your secretary uploads documents. Pocket Buddy's AI sorts and summarizes them
+      automatically. You review everything that matters — from your phone, in minutes, wherever you are.</p>
+    <div class="btn-row">
+      <a class="btn btn-primary" href="{% url 'login' %}">Sign In to Pocket Buddy</a>
+      <a class="btn btn-ghost" href="#how">How It Works</a>
+    </div>
+    <div class="tiny">Private &amp; secure by design &nbsp;·&nbsp; Works on any phone &nbsp;·&nbsp; Nothing to install</div>
+  </div>
+</header>
+
+<div class="strip">
+  <div class="wrap">
+    <div class="item"><span class="dot"></span><b>Private</b>&nbsp;— only your office sees your files</div>
+    <div class="item"><span class="dot"></span><b>Mobile-first</b>&nbsp;— made for your phone</div>
+    <div class="item"><span class="dot"></span><b>AI-organized</b>&nbsp;— sorted &amp; summarized for you</div>
+    <div class="item"><span class="dot"></span><b>Honest</b>&nbsp;— never invents a fact</div>
+  </div>
+</div>
+
+<section id="how">
+  <div class="wrap">
+    <div class="kicker">How It Works</div>
+    <h2>Three steps. Zero friction.</h2>
+    <p class="sub">Pocket Buddy fits the way a small office already works — no retraining, no new habits.</p>
+    <div class="steps">
+      <div class="step">
+        <div class="num">STEP 01</div>
+        <div class="icon">📤</div>
+        <h3>Your secretary uploads</h3>
+        <p>Contracts, filings, evidence, letters, bills — she drops them in from her desk, tagged to the right client or matter.</p>
+      </div>
+      <div class="step">
+        <div class="num">STEP 02</div>
+        <div class="icon">🤖</div>
+        <h3>AI sorts &amp; summarizes</h3>
+        <p>Each document is automatically categorized and given a plain-English summary, so you know what it is before you even open it.</p>
+      </div>
+      <div class="step">
+        <div class="num">STEP 03</div>
+        <div class="icon">📱</div>
+        <h3>You review on your phone</h3>
+        <p>A clean feed of what needs your attention. Read it, mark it handled, leave a note back for your secretary — done.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="features" style="padding-top:0">
+  <div class="wrap">
+    <div class="kicker">What You Get</div>
+    <h2>Everything a busy attorney actually needs.</h2>
+    <p class="sub">No bloat, no clutter — just the features that save you time every single day.</p>
+    <div class="grid2">
+      <div class="feat">
+        <div class="fi">🗂️</div>
+        <h3>Automatic categorization</h3>
+        <p>Contracts, motions, evidence, correspondence, and billing are sorted for you — find anything in seconds.</p>
+      </div>
+      <div class="feat">
+        <div class="fi">📝</div>
+        <h3>Plain-English summaries</h3>
+        <p>Every document gets a one-to-two sentence summary. Skim the summary, open only what needs a closer look.</p>
+      </div>
+      <div class="feat">
+        <div class="fi">🔔</div>
+        <h3>A feed of what's new</h3>
+        <p>See exactly what your secretary uploaded and what's still waiting on you — nothing slips through the cracks.</p>
+      </div>
+      <div class="feat">
+        <div class="fi">💬</div>
+        <h3>Two-way notes</h3>
+        <p>Leave a comment on any document and your secretary sees it instantly. No more phone tag over a single file.</p>
+      </div>
+      <div class="feat">
+        <div class="fi">🔒</div>
+        <h3>Private &amp; secure</h3>
+        <p>Every file is behind your office's private login. Only your team can see your documents — no one else, ever.</p>
+      </div>
+      <div class="feat">
+        <div class="fi">☁️</div>
+        <h3>Always available</h3>
+        <p>Hosted in the cloud and always on. Your files are there whether you're in court, at home, or on the road.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="kicker">Built For Two</div>
+    <h2>One tool, two happy people.</h2>
+    <p class="sub">Pocket Buddy is designed around the real relationship between an attorney and their secretary.</p>
+    <div class="split">
+      <div class="role sec">
+        <div class="tag">For Your Secretary</div>
+        <h3>Upload &amp; done.</h3>
+        <ul>
+          <li>Simple upload screen — no training needed</li>
+          <li>Tag files to a client or matter in one tap</li>
+          <li>Add a note for you on any document</li>
+          <li>See your replies and comments instantly</li>
+        </ul>
+      </div>
+      <div class="role boss">
+        <div class="tag">For You, The Attorney</div>
+        <h3>Review anywhere.</h3>
+        <ul>
+          <li>A phone-first feed of everything new</li>
+          <li>Read AI summaries before opening a file</li>
+          <li>Mark items handled as you clear them</li>
+          <li>Comment back without a phone call</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="trust">
+      <div class="big">Built to be <em>trustworthy</em> — because your work depends on it.</div>
+      <p>Pocket Buddy's AI only ever reads the real document you uploaded. It <strong>never</strong> invents a client,
+        a case, or a fact. If a file can't be read clearly, it's simply left for a human to look at — never guessed at.</p>
+      <p>Your documents stay inside your office's private, password-protected space. There's no public page for your files,
+        no sharing, and no one outside your team can ever see them.</p>
+    </div>
+  </div>
+</section>
+
+<section class="cta">
+  <div class="wrap">
+    <div class="kicker" style="text-align:center">Ready When You Are</div>
+    <h2>Sign in to get started.</h2>
+    <p>Pocket Buddy is live and ready. Sign in with your office account to begin.</p>
+    <div class="btn-row">
+      <a class="btn btn-primary" href="{% url 'login' %}">Sign In to Pocket Buddy</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="fb">Pocket Buddy</div>
+    <div>Your law office, in your pocket.</div>
+  </div>
+</footer>
+
+</body>
+</html>
